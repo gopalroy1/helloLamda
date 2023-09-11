@@ -30,13 +30,13 @@ Resources:
         HelloWorld:
           Type: Api # More info about API Event Source: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#api
           Properties:
-            Path: /hello
-            Method: GET
-  HelloWorldFunction1:
+            Path: /add
+            Method: POST
+  HelloWorldFunction2:
     Type: AWS::Serverless::Function # More info about Function Resource: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#awsserverlessfunction
     Properties:
       CodeUri: hello-world/
-      Handler: app.lambdaHandler
+      Handler: getbyid.getlambda
       Runtime: nodejs14.x
       Architectures:
         - x86_64
@@ -47,13 +47,30 @@ Resources:
         HelloWorld:
           Type: Api # More info about API Event Source: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#api
           Properties:
-            Path: /add
-            Method: POST
-  HelloWorldFunction2:
+            Path: /get/{id}
+            Method: GET
+  HelloWorldFunction3:
     Type: AWS::Serverless::Function # More info about Function Resource: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#awsserverlessfunction
     Properties:
       CodeUri: hello-world/
-      Handler: app.lambdaHandler
+      Handler: deletebyid.deleteLambda
+      Runtime: nodejs14.x
+      Architectures:
+        - x86_64
+      Environment:
+        Variables:
+          DYNAMODB_TABLE: !Ref MoviesTable
+      Events:
+        HelloWorld:
+          Type: Api # More info about API Event Source: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#api
+          Properties:
+            Path: /delete/{id}
+            Method: DELETE
+  HelloWorldFunction4:
+    Type: AWS::Serverless::Function # More info about Function Resource: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#awsserverlessfunction
+    Properties:
+      CodeUri: hello-world/
+      Handler: update.UpdateLambda
       Runtime: nodejs14.x
       Architectures:
         - x86_64
@@ -66,57 +83,40 @@ Resources:
           Properties:
             Path: /update
             Method: PUT
-  HelloWorldFunction3:
-    Type: AWS::Serverless::Function # More info about Function Resource: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#awsserverlessfunction
-    Properties:
-      CodeUri: hello-world/
-      Handler: app.lambdaHandler
-      Runtime: nodejs14.x
-      Architectures:
-        - x86_64
-      Environment:
-        Variables:
-          DYNAMODB_TABLE: !Ref MoviesTable
-      Events:
-        HelloWorld:
-          Type: Api # More info about API Event Source: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#api
-          Properties:
-            Path: /delete
-            Method: DELETE
-  HelloWorldFunction4:
-    Type: AWS::Serverless::Function # More info about Function Resource: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#awsserverlessfunction
-    Properties:
-      CodeUri: hello-world/
-      Handler: app.lambdaHandler
-      Runtime: nodejs14.x
-      Architectures:
-        - x86_64
-      Environment:
-        Variables:
-          DYNAMODB_TABLE: !Ref MoviesTable
-      Events:
-        HelloWorld:
-          Type: Api # More info about API Event Source: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#api
-          Properties:
-            Path: /getone
-            Method: GET
-  HelloWorldFunction5:
-    Type: AWS::Serverless::Function # More info about Function Resource: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#awsserverlessfunction
-    Properties:
-      CodeUri: hello-world/
-      Handler: app.lambdaHandler
-      Runtime: nodejs14.x
-      Architectures:
-        - x86_64
-      Environment:
-        Variables:
-          DYNAMODB_TABLE: !Ref MoviesTable
-      Events:
-        HelloWorld:
-          Type: Api # More info about API Event Source: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#api
-          Properties:
-            Path: /getall
-            Method: GET
+  # HelloWorldFunction4:
+  #   Type: AWS::Serverless::Function # More info about Function Resource: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#awsserverlessfunction
+  #   Properties:
+  #     CodeUri: hello-world/
+  #     Handler: app.lambdaHandler
+  #     Runtime: nodejs14.x
+  #     Architectures:
+  #       - x86_64
+  #     Environment:
+  #       Variables:
+  #         DYNAMODB_TABLE: !Ref MoviesTable
+  #     Events:
+  #       HelloWorld:
+  #         Type: Api # More info about API Event Source: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#api
+  #         Properties:
+  #           Path: /getone
+  #           Method: GET
+  # HelloWorldFunction5:
+  #   Type: AWS::Serverless::Function # More info about Function Resource: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#awsserverlessfunction
+  #   Properties:
+  #     CodeUri: hello-world/
+  #     Handler: app.lambdaHandler
+  #     Runtime: nodejs14.x
+  #     Architectures:
+  #       - x86_64
+  #     Environment:
+  #       Variables:
+  #         DYNAMODB_TABLE: !Ref MoviesTable
+  #     Events:
+  #       HelloWorld:
+  #         Type: Api # More info about API Event Source: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#api
+  #         Properties:
+  #           Path: /getall
+  #           Method: GET
 
   
   # BOOKTABLE:

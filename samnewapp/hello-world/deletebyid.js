@@ -1,25 +1,21 @@
 const aws = require('aws-sdk')
-const { v1 } = require('uuid');
-
 const dynamoDB = new aws.DynamoDB.DocumentClient({
     endpoint: 'https://8000-gopalroy1-hellolamda-qs3k2oizjq7.ws-us104.gitpod.io/'
 })
 
 
+exports.deleteLambda = async (event, context) => {
+    const newId = parseInt(event.multiValueQueryStringParameters.id[0]);
 
-exports.lambdaHandler = async (event, context) => {
-    let headers = { 'Content-Type': 'application/json'};
-    let data = JSON.parse(event.body);
-    let params = {
-        TableName:"BookTable",
-        Item :{
-            KEY_NAME :v1(),
-            createdAt: new Date().getTime(),
-            id:data.id,
-        }
-    }
+    const params = {
+        TableName : "BookTable",
+        Key: { id: newId },
+      };
+      let item=null;
+      let data = null;
     try {
-        body = await dynamoDB.put((params)).promise();
+         data = await dynamoDB.delete(params).promise();
+         item = data.item;
         
  
     } catch (err) {
@@ -31,13 +27,15 @@ exports.lambdaHandler = async (event, context) => {
                 Error: err
             })
         }    }
+        console.log(data)
     return {
         statusCode: 200,
         body: JSON.stringify({
-            Message:`${data.id} has been added in the database`,
+            Message:`The requried items have been deleted `,
+            item:JSON.stringify(data),
             Sucess:true,
-            item:JSON.stringify(data)
             
         })
     }
+
 };
