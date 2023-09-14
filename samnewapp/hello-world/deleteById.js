@@ -1,6 +1,6 @@
 const aws = require('aws-sdk')
 const dynamoDB = new aws.DynamoDB.DocumentClient({
-    endpoint: 'https://8000-gopalroy1-hellolamda-qs3k2oizjq7.ws-us104.gitpod.io/'
+    endpoint: process.env.DYNAMODB_URL,
 })
 
 
@@ -11,11 +11,18 @@ exports.deleteLambda = async (event, context) => {
         TableName : "BookTable",
         Key: { id: newId },
       };
-      let item=null;
-      let data = null;
-    try {
-         data = await dynamoDB.delete(params).promise();
-         item = data.item;
+      try {
+        let data = await dynamoDB.delete(params).promise();
+
+         return {
+            statusCode: 200,
+            body: JSON.stringify({
+                Message:`The requried items have been deleted `,
+                item:data,
+                Sucess:true,
+                
+            })
+        }
         
  
     } catch (err) {
@@ -27,15 +34,4 @@ exports.deleteLambda = async (event, context) => {
                 Error: err
             })
         }    }
-        console.log(data)
-    return {
-        statusCode: 200,
-        body: JSON.stringify({
-            Message:`The requried items have been deleted `,
-            item:JSON.stringify(data),
-            Sucess:true,
-            
-        })
-    }
-
 };

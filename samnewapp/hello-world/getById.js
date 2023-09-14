@@ -1,32 +1,29 @@
 const aws = require('aws-sdk')
 const dynamoDB = new aws.DynamoDB.DocumentClient({
-    endpoint: process.env.DYNAMODB_URL,
+    endpoint: process.env.DYNAMODB_URL
 })
 
 
-exports.UpdateLambda = async (event, context) => {
+exports.getLambda = async (event, context) => {
     
-
-    let reqBody = JSON.parse(event.body);
-    let id = reqBody?.id;
-    let name = reqBody?.name;
+    const newId = parseInt(event.multiValueQueryStringParameters.id[0]);
     const params = {
         TableName : "BookTable",
-        Item:{id:id,name:name}
+        Key: { id: newId },
       };
     try {
-        let data = await dynamoDB.put(params).promise();
-        let item = data.item;
-        
-         return {
+        let data = await dynamoDB.get(params).promise();       
+        return {
             statusCode: 200,
             body: JSON.stringify({
-                Message:`The requried items have been updated `,
+                Message:`The requried items have been fetched `,
                 item:data,
+                eventhai:newId,
                 Sucess:true,
                 
             })
         }
+    
  
     } catch (err) {
         console.log("In the catch block of the function ",err);
